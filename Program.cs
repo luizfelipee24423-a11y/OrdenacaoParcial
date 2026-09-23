@@ -14,7 +14,7 @@ internal class Program
 
         TipoVetor tipoVetor = LerTipoVetor();
 
-        int k = LerQuantidadeK();
+        int k = LerQuantidadeK(tamanhoVetor);
 
         TipoBusca tipoBusca = LerTipoBusca();
 
@@ -27,70 +27,183 @@ internal class Program
 
         Impressao.ExibirVetor(vetor);
 
-        int[] resultado = algoritmo switch
-        {
-            TipoAlgoritmo.Selection =>
-                SelectionSortParcial.Executar(vetor, k, tipoBusca),
+        Console.WriteLine("\nExecutando algoritmo...");
 
-            TipoAlgoritmo.Insertion =>
-                InsertionSortParcial.Executar(vetor, k, tipoBusca),
-
-            TipoAlgoritmo.Quick =>
-                QuickSortParcial.Executar(vetor, k, tipoBusca),
-
-            TipoAlgoritmo.Heap =>
-                HeapSortParcial.Executar(vetor, k, tipoBusca),
-
-            _ => throw new ArgumentException()
-        };
+        int[] resultado =
+            MedidorTempo.Executar(
+                () => ExecutarAlgoritmo(
+                    algoritmo,
+                    vetor,
+                    k,
+                    tipoBusca));
 
         Console.WriteLine("\nResultado:");
 
         Impressao.ExibirVetor(resultado);
     }
 
-    private static int LerTamanhoVetor()
+    private static int[] ExecutarAlgoritmo(
+        TipoAlgoritmo algoritmo,
+        int[] vetor,
+        int k,
+        TipoBusca tipoBusca)
     {
-        Console.Write("Informe N: ");
-        return int.Parse(Console.ReadLine()!);
+        return algoritmo switch
+        {
+            TipoAlgoritmo.Selection =>
+                SelectionSortParcial.Executar(
+                    vetor,
+                    k,
+                    tipoBusca),
+
+            TipoAlgoritmo.Insertion =>
+                InsertionSortParcial.Executar(
+                    vetor,
+                    k,
+                    tipoBusca),
+
+            TipoAlgoritmo.Quick =>
+                QuickSortParcial.Executar(
+                    vetor,
+                    k,
+                    tipoBusca),
+
+            TipoAlgoritmo.Heap =>
+                HeapSortParcial.Executar(
+                    vetor,
+                    k,
+                    tipoBusca),
+
+            _ => throw new ArgumentException(
+                "Algoritmo inválido.")
+        };
     }
 
-    private static int LerQuantidadeK()
+    private static int LerTamanhoVetor()
     {
-        Console.Write("Informe K: ");
-        return int.Parse(Console.ReadLine()!);
+        while (true)
+        {
+            Console.Write("Informe N: ");
+
+            if (
+                int.TryParse(
+                    Console.ReadLine(),
+                    out int n)
+                &&
+                n > 0
+            )
+            {
+                return n;
+            }
+
+            Console.WriteLine(
+                "Valor inválido. N deve ser maior que zero.");
+        }
+    }
+
+    private static int LerQuantidadeK(
+        int tamanhoVetor)
+    {
+        while (true)
+        {
+            Console.Write("Informe K: ");
+
+            if (
+                int.TryParse(
+                    Console.ReadLine(),
+                    out int k)
+                &&
+                k > 0
+                &&
+                k <= tamanhoVetor
+            )
+            {
+                return k;
+            }
+
+            Console.WriteLine(
+                $"Valor inválido. K deve estar entre 1 e {tamanhoVetor}.");
+        }
     }
 
     private static TipoVetor LerTipoVetor()
     {
-        Console.WriteLine("\nTipo do Vetor:");
-        Console.WriteLine("1 - Crescente");
-        Console.WriteLine("2 - Decrescente");
-        Console.WriteLine("3 - Aleatório");
+        while (true)
+        {
+            Console.WriteLine("\nTipo do Vetor:");
+            Console.WriteLine("1 - Crescente");
+            Console.WriteLine("2 - Decrescente");
+            Console.WriteLine("3 - Aleatório");
 
-        return (TipoVetor)int.Parse(Console.ReadLine()!);
+            if (
+                int.TryParse(
+                    Console.ReadLine(),
+                    out int opcao)
+                &&
+                opcao >= 1
+                &&
+                opcao <= 3
+            )
+            {
+                return (TipoVetor)opcao;
+            }
+
+            Console.WriteLine(
+                "Opção inválida.");
+        }
     }
 
     private static TipoBusca LerTipoBusca()
     {
-        Console.WriteLine("\nBusca:");
+        while (true)
+        {
+            Console.WriteLine("\nBusca:");
+            Console.WriteLine("1 - Menores elementos");
+            Console.WriteLine("2 - Maiores elementos");
 
-        Console.WriteLine("1 - Menores elementos");
-        Console.WriteLine("2 - Maiores elementos");
+            if (
+                int.TryParse(
+                    Console.ReadLine(),
+                    out int opcao)
+                &&
+                opcao >= 1
+                &&
+                opcao <= 2
+            )
+            {
+                return (TipoBusca)opcao;
+            }
 
-        return (TipoBusca)int.Parse(Console.ReadLine()!);
+            Console.WriteLine(
+                "Opção inválida.");
+        }
     }
 
     private static TipoAlgoritmo LerAlgoritmo()
     {
-        Console.WriteLine("\nAlgoritmo:");
+        while (true)
+        {
+            Console.WriteLine("\nAlgoritmo:");
+            Console.WriteLine("1 - Selection Parcial");
+            Console.WriteLine("2 - Insertion Parcial");
+            Console.WriteLine("3 - Quick Parcial");
+            Console.WriteLine("4 - Heap Parcial");
 
-        Console.WriteLine("1 - Selection Parcial");
-        Console.WriteLine("2 - Insertion Parcial");
-        Console.WriteLine("3 - Quick Parcial");
-        Console.WriteLine("4 - Heap Parcial");
+            if (
+                int.TryParse(
+                    Console.ReadLine(),
+                    out int opcao)
+                &&
+                opcao >= 1
+                &&
+                opcao <= 4
+            )
+            {
+                return (TipoAlgoritmo)opcao;
+            }
 
-        return (TipoAlgoritmo)
-            int.Parse(Console.ReadLine()!);
+            Console.WriteLine(
+                "Opção inválida.");
+        }
     }
 }
