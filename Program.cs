@@ -8,6 +8,8 @@ internal class Program
 {
     static void Main(string[] args)
     {
+
+
         Console.WriteLine("===== ORDENAÇÃO PARCIAL =====");
 
         int tamanhoVetor = LerTamanhoVetor();
